@@ -1,0 +1,23 @@
+---
+title: "Example Project 1 Task 1"
+author: "Ben"
+date: "2026-01-13"
+output: html_document
+---
+
+# Introduction
+We need an introduction.
+
+```{r}
+#Use the code below to load the data4led package to your current R session.
+library(data4led)
+
+#After entering the seed from the class list of seeds, use the code below to load the data for one randomly selected bulb. 
+bulb <- led_bulb(1,seed = 123)
+#Setting the seed fixes which randomly selected bulb you will use.
+#This makes your work reproducible.
+
+head(bulb)
+```
+
+We need to do more.

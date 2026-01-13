@@ -1,0 +1,44 @@
+---
+title: "Brain Gain 1-13-26"
+author: "Ben"
+date: "2026-01-13"
+output: html_document
+---
+
+# Brain Gains
+
+Let's do the first question. 
+
+In R, plot the function $f(x) = 3x$ for $-4\leq x\leq 7$.
+
+```{r}
+f <- function(x){3*x}
+x <- seq(-4,7)
+y <- f(x)
+plot(x,f(x),type="l")
+```
+
+Now in R, we will plot the function $g(x) = -2$ for $-5\leq x\leq 5$.
+
+```{r}
+f <- function(x){0*x+2}
+x <- seq(-5,5)
+y <- f(x)
+plot(x,f(x),type="l")
+```
+
+Let's solve both of the above with another approach.
+
+```{r}
+f <- function(x,m,b){m*x+b}
+x <- seq(-5,5)
+y <- f(x,m=0,b=-2)
+plot(x,y,type="l")
+x <- seq(-5,5)
+y <- f(x,m=3,b=0)
+plot(x,y,type="l")
+
+```
+
+
+
