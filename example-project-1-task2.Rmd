@@ -2,22 +2,24 @@
 title: "Example Project Task 2"
 author: "Ben"
 date: "2026-01-20"
-output: html_document
+output:
+  html_document:
+    code_folding: hide
 ---
 
 ## Introduction
 
-Consider the following general models
+Consider the following general models:
 
 - $f_0(L; a,b) = \frac{1}{b-a}$ with $-\infty < a < L < b < \infty$ (and 0 otherwise)
 - $f_1(L; h,a) = \frac{1}{\sqrt{2\pi a}}e^{-\frac{(x-h)^2}{2a}}$ with $h > 0$, $a > 0$, and $-\infty < L < \infty$
 - $f_2(L; h,a,b) = \frac{b^a}{\Gamma(a)}(L-h)^{a-1}e^{-b(L-h)}$ with $a > 0$, $b >0$, and $L \geq h$ (and 0 otherwise)
 
-In this task, we will explore the parameters above affect the graphs. 
+In this task, we will explore how the parameters above affect the graphs. 
 
 ## The parameters for $f_0$
 
-The parameter $a$ does .... The parameter b does ...  We can see this below in the graph.
+Parameter $a$ controls the left end of the domain of the function, while parameter b controls the right end of the domaion. The height of the function drops as $b-a$ increases. All of this can be seen in the two plots below. 
 
 ```{r}
 f0 <- function(x,a=0,b=1){
@@ -41,4 +43,44 @@ y <- f0(x,a,b)
 plot(x,y,type='l',xlim=c(90,110), ylim = c(0,1))
 mtext('change a=100 (keep b=102)', side = 3, line = 0)
 ```
+
+The function is constant between $a$ and $b$. The closer the two values, the higher the graph. 
+
+## The parameters for $f_1$
+
+For the function $f_1(L; h,a) = \frac{1}{\sqrt{2\pi a}}e^{-\frac{(x-h)^2}{2a}}$ with $h > 0$, $a > 0$, and $-\infty < L < \infty$, here is a description of how the parameters affect the plot. 
+
+- $h$: This is a horizontal shift, and controls where the highest point of the graph appears. 
+- $a$: The controls the width and height of the plot. A small value of $a$ leads to a thin tall mound, while a low value for $a$ leads to a wide short hill.
+
+In the graph below, we adjust $a$ from 1 to 5 (flattens the curve) and $h$ from 90 to 110 (center moves right).
+
+```{r}
+f1 <- function(L,h=0,a=1){
+  #Make sure h > 0 and a > 0.
+  1/sqrt(2*pi*a)*exp(-(L-h)^2/(2*a))
+}
+
+a <- 1
+L <- seq(80,120,0.1)
+h <- 90
+y <- f1(L,h,a)
+
+par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
+plot(L,y,type='l',xlim=c(80,120), ylim=c(0,0.5))
+mtext('plot f1 with h=90 and a=1', side = 3, line = 0)
+
+a <- 5
+h <- 110
+y <- f1(L,h,a)
+
+plot(L,y,type='l',xlim=c(80,120), ylim=c(0,0.5))
+mtext('change h=110 (move right) and a=5 (flatten)', side = 3, line = 0)
+```
+
+
+## The parameters for $f_2$ - The Gamma Distribution
+
+We might not come back to this one and fully write up a solution. We will see this function appear again in Project 3.
+
 
