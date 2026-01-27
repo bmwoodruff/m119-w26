@@ -1,0 +1,97 @@
+---
+title: "Example Project Task 3"
+author: "Ben"
+date: "2026-01-20"
+output:
+  html_document:
+    code_folding: hide
+---
+
+## Introduction
+
+Consider the following general models:
+
+- $f_0(L; a,b) = \frac{1}{b-a}$ with $-\infty < a < L < b < \infty$ (and 0 otherwise)
+- $f_1(L; h,a) = \frac{1}{\sqrt{2\pi a}}e^{-\frac{(x-h)^2}{2a}}$ with $h > 0$, $a > 0$, and $-\infty < L < \infty$
+- $f_2(L; h,a,b) = \frac{b^a}{\Gamma(a)}(L-h)^{a-1}e^{-b(L-h)}$ with $a > 0$, $b >0$, and $L \geq h$ (and 0 otherwise)
+
+In this task, we will select values for the parameters for these models to provide reasonable visual fits for the data in the image below. 
+
+```{r}
+library(data4led)
+dist <- led_time(2100)
+hist(dist$percent_intensity,probability = TRUE)
+```
+
+Recall that this data represents the percent intensity of 202 bulbs after they have been on for about 2000 hours. The shape of the distribution is symetrically mound shaped, with most observed values around 101.5 percent intensity.
+
+## Visually fitting $f_0$
+
+We already saw that parameter $a$ controls the left end of the domain of the function, while parameter b controls the right end of the domain. The function is constant between.  As the data in our histogram takes on values betwen 99.5 and 103.5, these seem like reasonable values to choose for $a$ and $b$.  With this choice, we have the following visual fit.  
+
+```{r}
+f0 <- function(x,a=0,b=1){
+  # Make sure a < b when using this function.
+  ifelse(x < a,NaN, ifelse(x <= b, 1/(b-a), NaN))
+}
+
+a <- 99.5
+b <- 103.5
+x <- seq(a,b,0.1)
+y <- f0(x,a,b)
+
+hist(dist$percent_intensity,probability = TRUE, xlim = c(95,105), ylim = c(0,1))
+lines(x,y,type='l',xlim=c(90,110), ylim = c(0,1))
+```
+
+The function is constant, but the data is mound shaped. These seem like a horrible match.  
+
+## Visually fitting $f_1$
+
+For the function $f_1(L; h,a) = \frac{1}{\sqrt{2\pi a}}e^{-\frac{(x-h)^2}{2a}}$ with $h > 0$, $a > 0$, and $-\infty < L < \infty$, we found the parameter $h$ controls the center of the mound while the parameter $a$ controls the height.  It seems reasonable to pick $h = 101.5$ for the center, and after some trial and error we will use $a = .33$. 
+
+```{r}
+f1 <- function(L,h=0,a=1){
+  #Make sure h > 0 and a > 0.
+  1/sqrt(2*pi*a)*exp(-(L-h)^2/(2*a))
+}
+
+a <- .33
+L <- seq(95,105,0.1)
+h <- 101.5
+y <- f1(L,h,a)
+
+hist(dist$percent_intensity,probability = TRUE, xlim = c(95,105), ylim = c(0,1))
+lines(L,y,type='l',xlim=c(95,105), ylim=c(0,1))
+```
+
+The model $f_1$ provides a mound shaped structure that tells a similar story as the data. 
+
+## The parameters for $f_2$ - The Gamma Distribution
+
+
+For the function $f_1(L; h,a) = \frac{1}{\sqrt{2\pi a}}e^{-\frac{(x-h)^2}{2a}}$ with $h > 0$, $a > 0$, and $-\infty < L < \infty$, we found the parameter $h$ controls the center of the mound while the parameter $a$ controls the height.  It seems reasonable to pick $h = 101.5$ for the center, and after some trial and error we will use $a = 13.2, b=5.5, h = 99.1$. 
+
+```{r}
+f2 <- function(L,a=1,b=1,h=0){
+  #Make sure a > 0 and b > 0 and L>=h.
+  b^a/gamma(a)*(L-h)^(a-1)*exp(-b*(L-h))
+}
+
+a <- 13.2
+b <- 5.5
+h <- 99.1
+L <- seq(95,105,0.1)
+y <- f2(L,a,b,h)
+
+hist(dist$percent_intensity,probability = TRUE, xlim = c(95,105), ylim = c(0,1))
+lines(L,y,type='l',xlim=c(95,105), ylim=c(0,1))
+```
+
+The model $f_2$ provides a mound shaped structure that is slightly right skewed. It tells a similar story as the data. 
+
+## Which model is better?
+
+This is a great question, and unfortunately one that we will not be able to answer with calculus. It's also an open question for which there may not be a correct answer ever. Each model comes with its own set of assumptions. Every set of assumptions usually in some way contracts the story told by the data.  
+
+In this class, we will focus on learning to pick the best parameter values for a given model. If a model turns out to tell a story that is clearly contradictory to data, we can use that to say a model is a poor choice.  However, we may end up with several models that all provide reasonable predictive power. 
