@@ -40,3 +40,16 @@ f <- function(x, a1=sol[1], a2=sol[2]  ){100+a1*x+a2*x^2}
 x <- seq(0,5000)
 lines(x, f(x), type='l')
 
+
+
+zi <- exp(-0.00005*ti)
+w <- sum(ti*zi*(yi-100*zi)) 
+b <- sum((ti*zi)^2)
+my_a1 <- w/b
+my_a1
+
+plot(ti,yi)
+f <- function(x, a1=my_a1 ){100*exp(-0.00005*x)+a1*x*exp(-0.00005*x)}
+x <- seq(0,5000)
+lines(x, f(x), type='l')
+
